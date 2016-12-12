@@ -12,8 +12,6 @@ package com.mt
 		private var _version:int;
 		// 时间
 		private var _date:String;
-		// utc时间
-		private var _utc:int;
 		// 地图宽
 		private var _width:int;
 		// 地图高
@@ -21,26 +19,24 @@ package com.mt
 		// 数据块
 		private var _tagArray:Array;
 		
-		public function MapHeader(width:int, height:int)
+		public function MapHeader(width:int, height:int, tileWidth:int, tileHeight:int)
 		{
 			this._flag = 0x50414d;
 			this._version = 1;
 			var dateFormatter:DateFormatter = new DateFormatter();
 			dateFormatter.formatString = "YYYY/MM/DD JJ:NN:SS";
-			var date:Date = new Date();
-			this._date = dateFormatter.format(date);
-			this._utc = date.getTime();
-			this._width = width;
-			this._height = height;
+			this._date = dateFormatter.format(new Date());
+			this._width = width / tileWidth;
+			this._height = height / tileHeight;
 			_tagArray = new Array();
 		}
 		
-		public function AddTag(tag:MapTag)
+		public function AddTag(tag:MapTag):void
 		{
 			_tagArray.push(tag);
 		}
 		
-		public function WriteToClient(bytes:ByteArray)
+		public function WriteToClient(bytes:ByteArray):void
 		{
 			bytes.writeInt(_flag);
 			bytes.writeInt(_version);
@@ -54,11 +50,9 @@ package com.mt
 			}
 		}
 		
-		public function WriteToServer(bytes:ByteArray)
+		public function WriteToServer(bytes:ByteArray):void
 		{
 			bytes.writeInt(_flag);
-			bytes.writeInt(_version);
-			bytes.writeInt(_utc);
 			bytes.writeInt(_width);
 			bytes.writeInt(_height);
 			for (var i:int = 0; i < _tagArray.length; ++i)

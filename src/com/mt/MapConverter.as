@@ -93,7 +93,7 @@ package com.mt
 			MAP_WIDTH = _data.mapW;
 			MAP_HEIGHT = _data.mapH;
 			MAP_ID= _data.id;
-			_header = new MapHeader(MAP_WIDTH, MAP_HEIGHT);
+			_header = new MapHeader(MAP_WIDTH, MAP_HEIGHT, TILE_WIDTH, TILE_HEIGHT);
 			loadRoadMap(dir.nativePath + "\\roadmap.png")
 		}
 		
