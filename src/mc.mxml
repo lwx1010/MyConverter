@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:mx="library://ns.adobe.com/flex/mx"
+					   width="640" height="360" title="Map Converter">
+	<s:Button label="点击导入路点图文件夹进行转换" horizontalCenter="0" verticalCenter="0" width="240" height="60" fontSize="15" click="clickHandler(event)"/>
+	<fx:Script>
+		<![CDATA[
+			import flash.events.Event;
+			
+			private function clickHandler(event:Event):void
+			{
+				Main();
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+</s:WindowedApplication>
