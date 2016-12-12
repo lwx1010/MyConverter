@@ -12,7 +12,7 @@ package com.mt
 		// 地图数据
 		private var _data:IMapData;
 		
-		public get tagType():int
+		public function get tagType():int
 		{
 			return this._tagType;
 		}

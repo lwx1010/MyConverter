@@ -170,7 +170,55 @@ package com.mt
 			_header.WriteToClient(_mapData);
 			stream.writeBytes(_mapData);
 			stream.close();
-			Alert.show("转换地图配置文件: " + mapCfgFile.url);
+			trace("转换客户端地图配置文件: " + mapCfgFile.url);
+			
+			SaveToServer();
+		}
+		
+		private function SaveToServer():void
+		{
+			var file:File = File.userDirectory.resolvePath(dir.nativePath + "\\Convert");
+			file.createDirectory();
+			var path:String = dir.nativePath + "\\Convert\\" + MAP_ID + ".blk";
+			var mapCfgFile:File = new File(path);
+			var stream:FileStream = new FileStream();
+			stream.open(mapCfgFile, FileMode.WRITE);
+			stream.endian = Endian.LITTLE_ENDIAN;
+			if (_mapData != null)
+			{
+				_mapData.clear();
+				_mapData.endian = Endian.LITTLE_ENDIAN;
+			}
+			
+			_header.WriteToServer(_mapData);
+			stream.writeBytes(_mapData);
+			stream.close();
+			trace("转换服务器地图配置文件: " + mapCfgFile.url);
+			
+			ConvertTilePictures();
+		}
+		
+		private function ConvertTilePictures():void
+		{
+			var file:File = File.userDirectory.resolvePath(dir.nativePath + "\\Convert\\" + MAP_ID);
+			file.createDirectory();
+			var fileList:Array = dir.getDirectoryListing();
+			for(var i:int = 0 ; i < fileList.length ; i ++)
+			{
+				if (fileList[i].name == "s.jpg") continue;
+				if (fileList[i].name.indexOf(".jpg") != -1)
+				{
+					var temp:Array = fileList[i].name.split('.')[0].split('_');
+					var x:int = int(temp[1]);
+					var y:int = int(temp[0]);
+					var index:int = x + y * (MAP_WIDTH / 320);
+					var destPath:String = dir.nativePath + "\\Convert\\" + MAP_ID + "\\" + index.toString() + ".jpg";
+					var picFile:File = new File(dir.nativePath + "\\" + fileList[i].name);
+					var destFile:File = new File(destPath);
+					picFile.copyTo(destFile, true);
+				}
+			}
+			Alert.show("转换完成");
 			Clear();
 		}
 		
@@ -181,6 +229,13 @@ package com.mt
 			_roadMap = null;
 			_header.clear();
 			_header = null;
+			_mapData.clear();
+			_mapData = null;
+			MAP_WIDTH = 0;
+			MAP_HEIGHT = 0;
+			MAP_ID = 0;
+			dir.cancel();
+			dir = null;
 		}
 		
 	}
